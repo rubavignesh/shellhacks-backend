@@ -4,13 +4,12 @@ const aiService = require('../services/aiService');
 
 // Create a new Task
 exports.createTask = async (req, res) => {
-    const { task, type } = req.body;
-    const userId = "66f86aedac76f19d65d23d02";
+    const { task, type , noteId } = req.body;
     if (!task || !type) {
         return res.status(400).json({ message: 'Task and type are required' });
     }
     try {
-        const newTask = new Task({ task, type, userId });
+        const newTask = new Task({ task, type, noteId });
         await newTask.save();
         res.status(201).json({ message: 'Task created', newTask });
     } catch (error) {
@@ -45,9 +44,8 @@ exports.generateSubTasks = async (req, res) => {
 
 // Get all Tasks for a user
 exports.getTasks = async (req, res) => {
-    const userId = "66f86aedac76f19d65d23d02";
     try {
-        const tasks = await Task.find({ userId }).populate('subTasks');
+        const tasks = await Task.find({  }).populate('subTasks');
         res.json({ tasks });
     } catch (error) {
         res.status(500).json({ message: 'Server error', error });

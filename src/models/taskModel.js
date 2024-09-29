@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const taskSchema = new mongoose.Schema({
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    noteId: { type: mongoose.Schema.Types.ObjectId, ref: 'Note', required: true },
     task: { type: String, required: true },
     type: { type: String, required: true }, 
     subTasks: [{ type: mongoose.Schema.Types.ObjectId, ref: 'SubTask' }],

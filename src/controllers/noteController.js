@@ -4,11 +4,15 @@ const Task = require('../models/taskModel');
 // Create a new Note
 exports.createNote = async (req, res) => {
     const { title, description, tasks } = req.body;
+    const userId = req.params.id;
     if (!title) {
         return res.status(400).json({ message: 'Title is required' });
     }
+    if (!userId) {
+        return res.status(400).json({ message: 'User ID is required' });
+    }
     try {
-        const newNote = new Note({ title, description, tasks });
+        const newNote = new Note({ title, description, tasks, userId });
         await newNote.save();
         res.status(201).json({ message: 'Note created', newNote });
     } catch (error) {
@@ -19,7 +23,20 @@ exports.createNote = async (req, res) => {
 // Get all Notes
 exports.getNotes = async (req, res) => {
     try {
-        const notes = await Note.find().populate('tasks');
+        const notes = await Note.find({ }).populate('tasks');
+        res.json({ notes });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error });
+    }
+};
+
+exports.getNoteByUserId = async (req, res) => {
+    const { userId } = req.params;
+    try {
+        const notes = await Note.find({ userId: userId }).populate('tasks');
+        if (!notes.length) {
+            return res.status(404).json({ message: 'No notes found for this user' });
+        }
         res.json({ notes });
     } catch (error) {
         res.status(500).json({ message: 'Server error', error });
@@ -44,8 +61,9 @@ exports.getNoteById = async (req, res) => {
 exports.updateNoteById = async (req, res) => {
     const { id } = req.params;
     const { title, description, tasks } = req.body;
+    const userId = req.params.id;
     try {
-        const note = await Note.findByIdAndUpdate(id, { title, description, tasks }, { new: true });
+        const note = await Note.findByIdAndUpdate(id, { title, description, tasks, userId }, { new: true });
         if (!note) {
             return res.status(404).json({ message: 'Note not found' });
         }

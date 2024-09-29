@@ -26,7 +26,8 @@ exports.getUserById = async (req, res) => {
 // Get user by name
 exports.getUserByName = async (req, res) => {
     try {
-        const user = await User.findOne({ username: req.params.name });
+        const { name } = req.body;
+        const user = await User.findOne({ name: name });
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
@@ -76,4 +77,17 @@ exports.updateThought = async (req, res) => {
     }
 };
 
+exports.updateName = async (req, res) => {
+    const { id } = req.params;
+    const { name } = req.body;
+    try {
+        const user = await User.findByIdAndUpdate(id, { name }, { new: true });
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        res.json({ message: 'Name updated', user });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error });
+    }
+};
 

@@ -1,17 +1,19 @@
 const Job = require('../models/jobModel');
+const aiService = require('../services/aiService');
 
 exports.searchJobs = async (req, res) => {
     const { jobTitle, postingTime, location, experienceLevel } = req.body;
     if (!jobTitle && !postingTime && !location && !experienceLevel) {
         return res.status(400).json({ message: 'At least one search parameter is required' });
     }
-
     try {
         // Generate LinkedIn boolean search URL
+        console.log("Generating LinkedIn Link...");
         const linkedInLink = await aiService.aiGenerateBooleanLink(jobTitle, postingTime, location, experienceLevel);
-        res.json({ linkedInLink });
+        console.log("LinkedIn Link:", linkedInLink);
+        // res.json({ linkedInLink });
     } catch (error) {
-        res.status(500).json({ message: 'Server error', error });
+        res.status(500).json({ message: 'Server error', error});
     }
 };
 

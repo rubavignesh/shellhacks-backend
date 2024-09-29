@@ -80,6 +80,4 @@ Main Task: ${task}`;
     }
 };
 
-
-
 module.exports = { aiGenerateSubTasks, aiGenerateBooleanLink };

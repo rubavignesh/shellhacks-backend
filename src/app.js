@@ -7,13 +7,13 @@ const jobRoutes = require('./routes/jobRoutes');
 const userRoutes = require('./routes/userRoutes');
 const noteRoutes = require('./routes/noteRoutes');
 const connectDB = require('./config/db');
-
+const cors = require('cors');
 // Initialize database connection
 connectDB();
 
 const app = express();
 app.use(bodyParser.json());
-
+app.use(cors());
 // Routes
 app.use('/tasks', taskRoutes);
 app.use('/jobs', jobRoutes);

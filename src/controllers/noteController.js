@@ -3,7 +3,7 @@ const Task = require('../models/taskModel');
 
 // Create a new Note
 exports.createNote = async (req, res) => {
-    const { title, description, tasks } = req.body;
+    const { title } = req.body;
     const userId = req.params.id;
     if (!title) {
         return res.status(400).json({ message: 'Title is required' });
@@ -12,7 +12,7 @@ exports.createNote = async (req, res) => {
         return res.status(400).json({ message: 'User ID is required' });
     }
     try {
-        const newNote = new Note({ title, description, tasks, userId });
+        const newNote = new Note({ title, userId });
         await newNote.save();
         res.status(201).json({ message: 'Note created', newNote });
     } catch (error) {

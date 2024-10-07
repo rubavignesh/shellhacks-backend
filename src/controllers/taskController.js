@@ -1,16 +1,25 @@
 const Task = require('../models/taskModel');
 const SubTask = require('../models/subTaskModel');
 const aiService = require('../services/aiService');
+const Note = require('../models/noteModel');
 
 // Create a new Task
 exports.createTask = async (req, res) => {
-    const { task, type , noteId } = req.body;
-    if (!task || !type) {
-        return res.status(400).json({ message: 'Task and type are required' });
+    const { task, noteId } = req.body;
+    if (!task) {
+        return res.status(400).json({ message: 'Task is required' });
     }
     try {
-        const newTask = new Task({ task, type, noteId });
+        const note = await Note.findById(noteId);
+        if (!note) {
+            return res.status(404).json({ message: 'Note not found' });
+        }
+
+        const newTask = new Task({ task, noteId });
         await newTask.save();
+
+        note.tasks.push(newTask);
+        await note.save();
         res.status(201).json({ message: 'Task created', newTask });
     } catch (error) {
         res.status(500).json({ message: 'Server error', error });

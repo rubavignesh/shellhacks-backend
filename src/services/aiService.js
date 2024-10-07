@@ -3,35 +3,34 @@ const { modelOutput } = require('./claudeRequest');
 const aiGenerateBooleanLink = async (jobTitle, postingTime, location, experienceLevel) => {
     const prompt = `You are an AI assistant tasked with generating a LinkedIn boolean search URL based on the provided job details. The user's inputs are:
 
-Job Title: "${jobTitle}"
-Job Posting Time: "${postingTime}" (e.g., "Last 24 hours", "Past Week", etc.)
-Location: "${location}"
-Experience Level: "${experienceLevel}" (e.g., "Entry Level", "Mid-Senior Level", etc.)
+Job Title: ${jobTitle}
+Job Posting Time: ${postingTime} (e.g., "Last 24 hours", "Past Week", etc.)
+Location: ${location}
+Experience Level: ${experienceLevel} (e.g., "Entry Level", "Mid-Senior Level", etc.)
 
 Your role is to construct a boolean search query and return the LinkedIn search URL that directly links to relevant job postings.
 
 In your response:
 1. Construct the boolean search string based on the job title, posting time, location, and experience level provided.
 2. Make sure the search string includes appropriate filters for time (job posting date), location, and experience level.
-3. Use the correct LinkedIn URL format: https://www.linkedin.com/jobs/search/?f_E=${experienceLevel}&f_TPR=${postingTime}&geoId=${geoId}&keywords=${jobTitle}&origin=JOB_SEARCH_PAGE_JOB_FILTER
+3. Use the correct LinkedIn URL format: https://www.linkedin.com/jobs/search/?f_E=${experienceLevel}&f_TPR=${postingTime}&geoId={geo ID based on location}&keywords=${jobTitle}&origin=JOB_SEARCH_PAGE_JOB_FILTER
 4. The 'geoId' for the location should be obtained dynamically based on the given location.
 5. Return the complete LinkedIn search URL as the result.
 
 Now, based on the provided job title, posting time, location, and experience level, generate the LinkedIn boolean search URL.
 
-Job Title: "${jobTitle}"
-Posting Time: "${postingTime}"
-Location: "${location}"
-Experience Level: "${experienceLevel}"
+I want only the link to be returned as the output.
 ;`
 
 try {
+    console.log('Generating LinkedIn boolean search URL...');
     let linkedInLink = await modelOutput(prompt);
     console.log(linkedInLink);
     return linkedInLink;
 } catch (error) {
     console.error('Error generating customized search for LinkedIn:', error);
-    throw error;
+    console.error('Full error details:', error); // Log full error details for debugging
+    throw error; // Rethrow the error for further handling if needed
 }
 
 }
@@ -80,4 +79,4 @@ Main Task: ${task}`;
     }
 };
 
-module.exports = { aiGenerateSubTasks, aiGenerateBooleanLink };
+module.exports = { aiGenerateBooleanLink, aiGenerateSubTasks };

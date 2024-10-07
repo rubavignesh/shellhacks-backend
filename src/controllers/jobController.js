@@ -11,7 +11,8 @@ exports.searchJobs = async (req, res) => {
         console.log("Generating LinkedIn Link...");
         const linkedInLink = await aiService.aiGenerateBooleanLink(jobTitle, postingTime, location, experienceLevel);
         console.log("LinkedIn Link:", linkedInLink);
-        // res.json({ linkedInLink });
+        res.json({ linkedInLink });
+        
     } catch (error) {
         res.status(500).json({ message: 'Server error', error});
     }

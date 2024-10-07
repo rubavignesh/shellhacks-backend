@@ -76,13 +76,14 @@ exports.updateNoteById = async (req, res) => {
 exports.deleteNoteById = async (req, res) => {
     const { id } = req.params;
     try {
-        const note = await Note.findByIdAndDelete(id);
-        if (!note) {
+        const result = await Note.deleteOne({ _id: id });
+        if (result.deletedCount === 0) {
             return res.status(404).json({ message: 'Note not found' });
         }
-        await Task.deleteMany({ _id: { $in: note.tasks } });
+        await Task.deleteMany({ noteId: id });
         res.json({ message: 'Note and associated tasks deleted successfully' });
     } catch (error) {
-        res.status(500).json({ message: 'Server error', error });
+        console.error('Error deleting note:', error);
+        res.status(500).json({ message: 'Server error', error: error.message });
     }
 };

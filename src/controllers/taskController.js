@@ -42,7 +42,7 @@ exports.generateSubTasks = async (req, res) => {
         const insertedSubTasks = await SubTask.insertMany(subTaskDocs);
 
         // Update the task with the generated sub-tasks
-        task.subTasks.push(...insertedSubTasks.map(subTask => subTask._id));
+        task.subTasks.push(...insertedSubTasks);
         await task.save();
 
         res.json({ subTasks: insertedSubTasks });

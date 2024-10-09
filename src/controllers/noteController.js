@@ -23,7 +23,7 @@ exports.createNote = async (req, res) => {
 // Get all Notes
 exports.getNotes = async (req, res) => {
     try {
-        const notes = await Note.find({ }).populate('tasks');
+        const notes = await Note.find({ }).populate({ path: 'tasks', populate: { path: 'subTasks' } });
         res.json({ notes });
     } catch (error) {
         res.status(500).json({ message: 'Server error', error });
@@ -33,7 +33,7 @@ exports.getNotes = async (req, res) => {
 exports.getNoteByUserId = async (req, res) => {
     const { userId } = req.params;
     try {
-        const notes = await Note.find({ userId: userId }).populate('tasks');
+        const notes = await Note.find({ userId: userId }).populate({ path: 'tasks', populate: { path: 'subTasks' } });
         if (!notes.length) {
             return res.status(404).json({ message: 'No notes found for this user' });
         }
